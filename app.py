@@ -1,5 +1,6 @@
 import OpenDartReader
 from pykrx import stock
+import streamlit as st
 
 
 # ==== 0. 객체 생성 ====
