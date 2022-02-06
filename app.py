@@ -4,7 +4,7 @@ from pykrx import stock
 
 # ==== 0. 객체 생성 ====
 # 객체 생성 (API KEY 지정) 
-#api_key = st.secrets["api_key"]
+api_key = st.secrets["api_key"]
 
 dart = OpenDartReader(api_key) 
 
