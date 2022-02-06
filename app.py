@@ -78,9 +78,9 @@ day1wkago = (datetime.now() - dt.timedelta(days=7)).strftime("%Y%m%d")
 mktcap = stock.get_market_cap(day1wkago, today, stockcd)['시가총액'].tail(1).values[0]
 numstk = stock.get_market_cap(day1wkago, today, stockcd)['상장주식수'].tail(1).values[0]
 
-st.write(f"시가총액: {mktcap}")
-st.write(f"주식수: {numstk}")
-st.write(f"주당자산: {assets/numstk}")
-st.write(f"주당이익: {profit/numstk}")
-st.write(f"주가: {mktcap/numstk}")
+st.write(f"시가총액: {mktcap:,.0f} 원")
+st.write(f"주식수: {numstk:,.0f}")
+st.write(f"주당자산: {assets/numstk:,.0f} 원")
+st.write(f"주당이익: {profit/numstk:,.0f} 원")
+st.write(f"주가: {mktcap/numstk:,.0f} 원")
 st.write(f"ROA: {profit/assets:,.1%}")
