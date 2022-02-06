@@ -37,9 +37,9 @@ fs_YQ.loc[fs_YQ['sj_div'].isin(['BS']) & fs_YQ['account_id'].isin(['ifrs-full_Eq
 fs_YQ.loc[fs_YQ['sj_div'].isin(['BS']) & fs_YQ['account_id'].isin(['ifrs-full_Liabilities']), ]
 # 당기순익
 # 연결재무제표
-fs_YQ.loc[fs_YQ['sj_div'].isin(['IS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLossAttributableToOwnersOfParent', 'ifrs-full_ProfitLoss']), ]
+fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLossAttributableToOwnersOfParent', 'ifrs-full_ProfitLoss']), ]
 # 개별재무제표
-fs_YQ.loc[fs_YQ['sj_div'].isin(['IS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLoss']), ]
+fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLoss']), ]
 
 # 자본과 부채는 재무상태표에서 당기금액('thstrm_amount') 값을 가져오면 됨
 equity = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['BS']) & fs_YQ['account_id'].isin(['ifrs-full_Equity']), 'thstrm_amount'].replace(",", "")) # 당기자본(자본총계)
