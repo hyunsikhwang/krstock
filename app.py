@@ -60,7 +60,7 @@ except:
 
 profit = (profit_Prev_Yr-profit_Prev_YQ) + profit_Curr_YQ
 
-st.write(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}")
+st.markdown(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}", unsafe_allow_html=True)
 
 mktcap = stock.get_market_cap("20220204", "20220204", stockcd)['시가총액'].head(1).values[0]
 numstk = stock.get_market_cap("20220204", "20220204", stockcd)['상장주식수'].head(1).values[0]
