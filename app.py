@@ -1,6 +1,7 @@
 import OpenDartReader
 from pykrx import stock
 import streamlit as st
+from datetime import datetime
 
 
 # ==== 0. 객체 생성 ====
@@ -70,12 +71,15 @@ st.markdown(f"# {compName}")
 
 st.markdown(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}", unsafe_allow_html=True)
 
-mktcap = stock.get_market_cap("20220204", "20220204", stockcd)['시가총액'].head(1).values[0]
-numstk = stock.get_market_cap("20220204", "20220204", stockcd)['상장주식수'].head(1).values[0]
+today = datetime.datetime.now().strftime("%Y%m%d")
+day1wkago = (datetime.datetime.now() - datetime.timedelta(days=7)).strftime("%Y%m%d")
 
-st.write(mktcap)
-st.write(numstk)
-st.write(assets/numstk)
-st.write(profit/numstk)
-st.write(mktcap/numstk)
-st.write(profit/assets*100)
+mktcap = stock.get_market_cap(day1wkago, today, stockcd)['시가총액'].tail(1).values[0]
+numstk = stock.get_market_cap(day1wkago, today, stockcd)['상장주식수'].tail(1).values[0]
+
+st.write(f"시가총액: {mktcap}")
+st.write(f"주식수: {numstk}")
+st.write(f"주당자산: {assets/numstk}")
+st.write(f"주당이익: {profit/numstk}")
+st.write(f"주가: {mktcap/numstk}")
+st.write(f"ROA: {profit/assets:,.1%}")
