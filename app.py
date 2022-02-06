@@ -14,6 +14,8 @@ bsns_year = 2021
 bsns_qtr = 3
 
 stockcd = st.text_input("주식종목코드", value="005930")
+bsns_year = st.number_input("연도", value=2021)
+bsns_qtr = st.number_input("분기", value=3)
 
 dict_qtr = {1:11013, 2:11012, 3:11014, 4:11011}
 
