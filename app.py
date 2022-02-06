@@ -71,8 +71,8 @@ st.markdown(f"# {compName}")
 
 st.markdown(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}", unsafe_allow_html=True)
 
-today = datetime.datetime.now().strftime("%Y%m%d")
-day1wkago = (datetime.datetime.now() - datetime.timedelta(days=7)).strftime("%Y%m%d")
+today = datetime.now().strftime("%Y%m%d")
+day1wkago = (datetime.now() - datetime.timedelta(days=7)).strftime("%Y%m%d")
 
 mktcap = stock.get_market_cap(day1wkago, today, stockcd)['시가총액'].tail(1).values[0]
 numstk = stock.get_market_cap(day1wkago, today, stockcd)['상장주식수'].tail(1).values[0]
