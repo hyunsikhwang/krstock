@@ -11,7 +11,6 @@ api_key = st.secrets["api_key"]
 
 dart = OpenDartReader(api_key) 
 
-stockcd = "005930"
 bsns_year = 2021
 bsns_qtr = 3
 
@@ -83,7 +82,7 @@ profit = (profit_Prev_Yr-profit_Prev_YQ) + profit_Curr_YQ
 
 compName = stock.get_market_ticker_name(stockcd)
 
-st.markdown(f"# {compName}")
+st.markdown(f"# {compName} ({stockcd})")
 
 st.markdown(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}", unsafe_allow_html=True)
 
