@@ -15,15 +15,18 @@ stockcd = "005930"
 bsns_year = 2021
 bsns_qtr = 3
 
-allTickers = stock.get_market_price_change("20220211", "20220211", market="ALL").reset_index()[['티커', '종목명']]
+today = datetime.now().strftime("%Y%m%d")
+day1wkago = (datetime.now() - dt.timedelta(days=7)).strftime("%Y%m%d")
+
+allTickers = stock.get_market_price_change(day1wkago, today, market="ALL").reset_index()[['티커', '종목명']]
 
 tickers = allTickers['종목명'].tolist()
 
-stockcd = st.sidebar.text_input("주식종목코드", value="005930")
+stocknm = st.sidebar.selectbox("종목명", options=tickers, index=tickers.index('삼성전자'))
 bsns_year = st.sidebar.number_input("연도", value=2021)
 bsns_qtr = st.sidebar.number_input("분기", value=3)
-stocknm = st.sidebar.selectbox("종목명", options=tickers, index=tickers.index('삼성전자'))
 
+# 종목명(stocknm)을 ticker(stockcd) 로 변경
 stockcd = allTickers[(allTickers['종목명'] == stocknm)]['티커'].values[0]
 
 dict_qtr = {1:11013, 2:11012, 3:11014, 4:11011}
@@ -84,8 +87,6 @@ st.markdown(f"# {compName}")
 
 st.markdown(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}", unsafe_allow_html=True)
 
-today = datetime.now().strftime("%Y%m%d")
-day1wkago = (datetime.now() - dt.timedelta(days=7)).strftime("%Y%m%d")
 
 mktcap = stock.get_market_cap(day1wkago, today, stockcd)['시가총액'].tail(1).values[0]
 numstk = stock.get_market_cap(day1wkago, today, stockcd)['상장주식수'].tail(1).values[0]
