@@ -96,3 +96,7 @@ st.write(f"주당자산: {assets/numstk:,.0f} 원")
 st.write(f"주당이익: {profit/numstk:,.0f} 원")
 st.write(f"주가: {mktcap/numstk:,.0f} 원")
 st.write(f"ROA: {profit/assets:,.1%}")
+
+# 부채비율
+# 현금및현금성자산비율
+# 영업이익률
