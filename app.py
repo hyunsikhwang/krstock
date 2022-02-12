@@ -17,13 +17,14 @@ bsns_qtr = 3
 
 allTickers = stock.get_market_price_change("20220211", "20220211", market="ALL").reset_index()[['티커', '종목명']]
 
-tickers = allTickers['티커'].tolist()
+tickers = allTickers['종목명'].tolist()
 
 stockcd = st.sidebar.text_input("주식종목코드", value="005930")
 bsns_year = st.sidebar.number_input("연도", value=2021)
 bsns_qtr = st.sidebar.number_input("분기", value=3)
-test = st.sidebar.selectbox("종목명", options=tickers, index=tickers.index('삼성전자'))
-st.write(allTickers[(allTickers['티커'] == test)])
+stocknm = st.sidebar.selectbox("종목명", options=tickers, index=tickers.index('삼성전자'))
+
+stockcd = allTickers[(allTickers['종목명'] == stocknm)]['티커'].values[0]
 
 dict_qtr = {1:11013, 2:11012, 3:11014, 4:11011}
 
