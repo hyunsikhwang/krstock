@@ -21,17 +21,17 @@ bsns_qtr = st.sidebar.number_input("분기", value=3)
 
 dict_qtr = {1:11013, 2:11012, 3:11014, 4:11011}
 
-fs_Prev_Yr = dart.finstate_all(corp=stockcd, bsns_year=f'{bsns_year-1}', fs_div='CFS', reprt_code=dict_qtr[bsns_qtr]) 
+fs_Prev_Yr = dart.finstate_all(corp=stockcd, bsns_year=f'{bsns_year-1}', fs_div='CFS', reprt_code=11011) 
 # 연결재무제표가 없는 경우에는 개별재무제표 읽어옴
 if fs_Prev_Yr is None:
-    fs_Prev_Yr = dart.finstate_all(corp=stockcd, bsns_year=f'{bsns_year-1}', fs_div='OFS', reprt_code=dict_qtr[bsns_qtr]) 
+    fs_Prev_Yr = dart.finstate_all(corp=stockcd, bsns_year=f'{bsns_year-1}', fs_div='OFS', reprt_code=11011) 
 
 # 가장 최근 분기, 그에 따라 reprt_code 가 변경되어야 함
 # reprt_code - 1분기보고서 : 11013 반기보고서 : 11012 3분기보고서 : 11014 사업보고서 : 11011
-fs_YQ = dart.finstate_all(corp=stockcd, bsns_year=f'{bsns_year}', fs_div='CFS', reprt_code=11014) 
+fs_YQ = dart.finstate_all(corp=stockcd, bsns_year=f'{bsns_year}', fs_div='CFS', reprt_code=dict_qtr[bsns_qtr]) 
 # 연결재무제표가 없는 경우에는 개별재무제표 읽어옴
 if fs_YQ is None:
-    fs_YQ = dart.finstate_all(corp=stockcd, bsns_year=f'{bsns_year}', fs_div='OFS', reprt_code=11014) 
+    fs_YQ = dart.finstate_all(corp=stockcd, bsns_year=f'{bsns_year}', fs_div='OFS', reprt_code=dict_qtr[bsns_qtr]) 
 
 # 자본
 fs_YQ.loc[fs_YQ['sj_div'].isin(['BS']) & fs_YQ['account_id'].isin(['ifrs-full_Equity']), ]
