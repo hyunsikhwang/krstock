@@ -125,3 +125,6 @@ st.write(f"GP/A: {grossprofit/assets:,.1%}")
 # 부채비율
 # 현금및현금성자산비율
 # 영업이익률
+# FCF: OCF - CAPEX
+# OCF: ifrs-full_CashFlowsFromUsedInOperatingActivities(영업활동을 통해 유입된 현금흐름)
+# CAPEX: ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities(유형자산의 취득) - ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities(무형자산의 취득)
