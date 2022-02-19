@@ -135,7 +135,7 @@ st.write(f"주당이익: {profit/numstk:,.0f} 원")
 st.write(f"주가: {mktcap/numstk:,.0f} 원")
 st.write(f"ROA: {profit/assets:,.1%}")
 st.write(f"GP/A: {grossprofit/assets:,.1%}")
-st.write(f"FCF/Equicy: {fcf/equity:,.1%}")
+st.write(f"FCF/Equity: {fcf/equity:,.1%}")
 
 # 부채비율
 # 현금및현금성자산비율
