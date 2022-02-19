@@ -78,8 +78,8 @@ try:
 
     # 가장 최근 분기 금액
     ocf_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_CashFlowsFromUsedInOperatingActivities']), 'thstrm_amount'].replace(",", ""))
-    capex_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities']), 'thstrm_amount'].replace(",", "")) \
-                  - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities']), 'thstrm_amount'].replace(",", ""))
+    capex_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['유형자산의 취득']), 'thstrm_amount'].replace(",", "")) \
+                  - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['무형자산의 취득']), 'thstrm_amount'].replace(",", ""))
 
 except:
     # 전년도 당분기 누적금액
@@ -91,8 +91,8 @@ except:
 
     # 가장 최근 분기 금액
     ocf_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_CashFlowsFromUsedInOperatingActivities']), 'thstrm_amount'].replace(",", ""))
-    capex_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities']), 'thstrm_amount'].replace(",", "")) \
-                  - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities']), 'thstrm_amount'].replace(",", ""))
+    capex_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['유형자산의 취득']), 'thstrm_amount'].replace(",", "")) \
+                  - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['무형자산의 취득']), 'thstrm_amount'].replace(",", ""))
 
     try:
         # 전년도 당분기 누적금액
