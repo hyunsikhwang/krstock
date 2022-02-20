@@ -99,7 +99,7 @@ except:
     ocf_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_CashFlowsFromUsedInOperatingActivities']), 'thstrm_amount'].replace(",", ""))
     try:
         capex_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['유형자산의 취득']), 'thstrm_amount'].replace(",", "")) \
-                    + int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['무형자산의 취득']), 'thstrm_amount'].replace(",", ""))
+                      + int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['무형자산의 취득']), 'thstrm_amount'].replace(",", ""))
         fcf_2_Curr_YQ = 0
     except:
         fcf_2_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['영업활동현금흐름']), 'thstrm_amount'].replace(",", "")) \
@@ -149,7 +149,7 @@ st.write(f"주당자산: {assets/numstk:,.0f} 원")
 st.write(f"주당이익: {profit/numstk:,.0f} 원")
 st.write(f"주가: {mktcap/numstk:,.0f} 원")
 st.write(f"PER: {mktcap/profit:,.2f}")
-st.write(f"PBR: {assets/profit:,.2f}")
+st.write(f"PBR: {mktcap/assets:,.2f}")
 st.write(f"ROA: {profit/assets:,.1%}")
 st.write(f"GP/A: {grossprofit/assets:,.1%}")
 st.write(f"FCF/Equity: {fcf/equity:,.1%}")
