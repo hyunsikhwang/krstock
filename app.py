@@ -76,10 +76,16 @@ try:
     # 가장 최근 분기 금액
     grossprofit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_GrossProfit']), 'thstrm_add_amount'].replace(",", "")) # 매출총이익
 
-    # 가장 최근 분기 금액
     ocf_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_CashFlowsFromUsedInOperatingActivities']), 'thstrm_amount'].replace(",", ""))
-    capex_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['유형자산의 취득']), 'thstrm_amount'].replace(",", "")) \
-                  - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['무형자산의 취득']), 'thstrm_amount'].replace(",", ""))
+    try:
+        # 가장 최근 분기 금액
+        capex_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['유형자산의 취득']), 'thstrm_amount'].replace(",", "")) \
+                      + int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['무형자산의 취득']), 'thstrm_amount'].replace(",", ""))
+        fcf_2_Curr_YQ = 0
+    except:
+        fcf_2_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['영업활동현금흐름']), 'thstrm_amount'].replace(",", "")) \
+                      - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['투자활동현금흐름']), 'thstrm_amount'].replace(",", ""))
+        capex_Curr_YQ = 0
 
 except:
     # 전년도 당분기 누적금액
@@ -91,8 +97,14 @@ except:
 
     # 가장 최근 분기 금액
     ocf_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_CashFlowsFromUsedInOperatingActivities']), 'thstrm_amount'].replace(",", ""))
-    capex_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['유형자산의 취득']), 'thstrm_amount'].replace(",", "")) \
-                  - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['무형자산의 취득']), 'thstrm_amount'].replace(",", ""))
+    try:
+        capex_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['유형자산의 취득']), 'thstrm_amount'].replace(",", "")) \
+                    + int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['무형자산의 취득']), 'thstrm_amount'].replace(",", ""))
+        fcf_2_Curr_YQ = 0
+    except:
+        fcf_2_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['영업활동현금흐름']), 'thstrm_amount'].replace(",", "")) \
+                      - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['투자활동현금흐름']), 'thstrm_amount'].replace(",", ""))
+        capex_Curr_YQ = 0
 
     try:
         # 전년도 당분기 누적금액
@@ -116,7 +128,10 @@ profit = (profit_Prev_Yr-profit_Prev_YQ) + profit_Curr_YQ
 grossprofit = (grossprofit_Prev_Yr-grossprofit_Prev_YQ) + grossprofit_Curr_YQ
 ocf = ocf_Curr_YQ
 capex = capex_Curr_YQ
-fcf = ocf - capex
+if fcf_2_Curr_YQ == 0:
+    fcf = ocf - capex
+else:
+    fcf = fcf_2_Curr_YQ
 
 compName = stock.get_market_ticker_name(stockcd)
 
@@ -142,6 +157,14 @@ st.write(f"FCF/Equity: {fcf/equity:,.1%}")
 # 부채비율
 # 현금및현금성자산비율
 # 영업이익률
-# FCF: OCF - CAPEX
-# OCF: ifrs-full_CashFlowsFromUsedInOperatingActivities(영업활동을 통해 유입된 현금흐름)
-# CAPEX: ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities(유형자산의 취득) - ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities(무형자산의 취득)
+# FCF = OCF - CAPEX
+# OCF = ifrs-full_CashFlowsFromUsedInOperatingActivities(영업활동을 통해 유입된 현금흐름)
+# CAPEX = ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities(유형자산의 취득) + ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities(무형자산의 취득)
+
+# FCF = CFO - CFI
+# CFO: 영업활동현금흐름
+# CFI: 투자활동현금흐름
+
+# asset 금액을 직전 4분기 평균이나 최근분기와 작년동기와의 평균값으로 사용
+# 배당수익률 추가
+# SKC 와 같이 유형자산의 취득, 무형자산의 취득 항목이 별도로 있지 않고 개별항목으로 재무제표 작성되어있는 회사들이 있어서 별도 처리 필요
