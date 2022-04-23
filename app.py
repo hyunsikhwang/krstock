@@ -11,9 +11,6 @@ api_key = st.secrets["api_key"]
 
 dart = OpenDartReader(api_key) 
 
-bsns_year = 2021
-bsns_qtr = 3
-
 today = datetime.now().strftime("%Y%m%d")
 day1wkago = (datetime.now() - dt.timedelta(days=7)).strftime("%Y%m%d")
 
@@ -23,7 +20,7 @@ tickers = allTickers['종목명'].tolist()
 
 stocknm = st.sidebar.selectbox("종목명", options=tickers, index=tickers.index('삼성전자'))
 bsns_year = st.sidebar.number_input("연도", value=2021)
-bsns_qtr = st.sidebar.number_input("분기", value=3)
+bsns_qtr = st.sidebar.number_input("분기", value=4)
 
 # 종목명(stocknm)을 ticker(stockcd) 로 변경
 stockcd = allTickers[(allTickers['종목명'] == stocknm)]['티커'].values[0]
