@@ -61,17 +61,20 @@ assets = equity + liability # 자산총계
 
 try:
     # 전년도 당분기 누적금액
-    profit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLossAttributableToOwnersOfParent']), 'frmtrm_add_amount'].replace(",", "")) # 당기순이익
+    if bsns_qtr != 4:
+        profit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLossAttributableToOwnersOfParent']), 'frmtrm_add_amount' if bsns_qtr != 4 else 'frmtrm_amount'].replace(",", "")) # 당기순이익
+    else:
+        profit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLossAttributableToOwnersOfParent']), 'frmtrm_amount'].replace(",", "")) # 당기순이익
     # 전년도말 금액
     profit_Prev_Yr = int(fs_Prev_Yr.loc[fs_Prev_Yr['sj_div'].isin(['IS', 'CIS']) & fs_Prev_Yr['account_id'].isin(['ifrs-full_ProfitLossAttributableToOwnersOfParent']), 'thstrm_amount'].replace(",", "")) # 당기순이익
     # 가장 최근 분기 금액
-    profit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLossAttributableToOwnersOfParent']), 'thstrm_add_amount'].replace(",", "")) # 당기순이익
+    profit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLossAttributableToOwnersOfParent']), 'thstrm_add_amount' if bsns_qtr != 4 else 'thstrm_amount'].replace(",", "")) # 당기순이익
 
-    grossprofit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_GrossProfit']), 'frmtrm_add_amount'].replace(",", "")) # 매출총이익
+    grossprofit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_GrossProfit']), 'frmtrm_add_amount' if bsns_qtr != 4 else 'frmtrm_amount'].replace(",", "")) # 매출총이익
     # 전년도말 금액
     grossprofit_Prev_Yr = int(fs_Prev_Yr.loc[fs_Prev_Yr['sj_div'].isin(['IS', 'CIS']) & fs_Prev_Yr['account_id'].isin(['ifrs-full_GrossProfit']), 'thstrm_amount'].replace(",", "")) # 매출총이익
     # 가장 최근 분기 금액
-    grossprofit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_GrossProfit']), 'thstrm_add_amount'].replace(",", "")) # 매출총이익
+    grossprofit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_GrossProfit']), 'thstrm_add_amount' if bsns_qtr != 4 else 'thstrm_amount'].replace(",", "")) # 매출총이익
 
     ocf_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_CashFlowsFromUsedInOperatingActivities']), 'thstrm_amount'].replace(",", ""))
     try:
@@ -86,11 +89,11 @@ try:
 
 except:
     # 전년도 당분기 누적금액
-    profit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLoss']), 'frmtrm_add_amount'].replace(",", "")) # 당기순이익
+    profit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLoss']), 'frmtrm_add_amount' if bsns_qtr != 4 else 'frmtrm_amount'].replace(",", "")) # 당기순이익
     # 전년도말 금액
     profit_Prev_Yr = int(fs_Prev_Yr.loc[fs_Prev_Yr['sj_div'].isin(['IS', 'CIS']) & fs_Prev_Yr['account_id'].isin(['ifrs-full_ProfitLoss']), 'thstrm_amount'].replace(",", "")) # 당기순이익
     # 가장 최근 분기 금액
-    profit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLoss']), 'thstrm_add_amount'].replace(",", "")) # 당기순이익
+    profit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_ProfitLoss']), 'thstrm_add_amount' if bsns_qtr != 4 else 'thstrm_amount'].replace(",", "")) # 당기순이익
 
     # 가장 최근 분기 금액
     ocf_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_CashFlowsFromUsedInOperatingActivities']), 'thstrm_amount'].replace(",", ""))
@@ -105,20 +108,20 @@ except:
 
     try:
         # 전년도 당분기 누적금액
-        grossprofit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_GrossProfit']), 'frmtrm_add_amount'].replace(",", "")) # 매출총이익
+        grossprofit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_GrossProfit']), 'frmtrm_add_amount' if bsns_qtr != 4 else 'frmtrm_amount'].replace(",", "")) # 매출총이익
         # 전년도말 금액
         grossprofit_Prev_Yr = int(fs_Prev_Yr.loc[fs_Prev_Yr['sj_div'].isin(['IS', 'CIS']) & fs_Prev_Yr['account_id'].isin(['ifrs-full_GrossProfit']), 'thstrm_amount'].replace(",", "")) # 매출총이익
         # 가장 최근 분기 금액
-        grossprofit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_GrossProfit']), 'thstrm_add_amount'].replace(",", "")) # 매출총이익
+        grossprofit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_GrossProfit']), 'thstrm_add_amount' if bsns_qtr != 4 else 'thstrm_amount'].replace(",", "")) # 매출총이익
 
     except:
         # 매출총이익이 없고 영업수익이 있는 회사에 대한 예외처리(NAVER)
         # 전년도 당분기 누적금액
-        grossprofit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_Revenue']), 'frmtrm_add_amount'].replace(",", "")) # 영업수익
+        grossprofit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_Revenue']), 'frmtrm_add_amount' if bsns_qtr != 4 else 'frmtrm_amount'].replace(",", "")) # 영업수익
         # 전년도말 금액
         grossprofit_Prev_Yr = int(fs_Prev_Yr.loc[fs_Prev_Yr['sj_div'].isin(['IS', 'CIS']) & fs_Prev_Yr['account_id'].isin(['ifrs-full_Revenue']), 'thstrm_amount'].replace(",", "")) # 영업수익
         # 가장 최근 분기 금액
-        grossprofit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_Revenue']), 'thstrm_add_amount'].replace(",", "")) # 영업수익
+        grossprofit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_Revenue']), 'thstrm_add_amount' if bsns_qtr != 4 else 'thstrm_amount'].replace(",", "")) # 영업수익
 
 
 profit = (profit_Prev_Yr-profit_Prev_YQ) + profit_Curr_YQ
