@@ -3,6 +3,7 @@ from pykrx import stock
 import streamlit as st
 from datetime import datetime
 import datetime as dt
+from pytz import timezone, utc
 
 
 # ==== 0. 객체 생성 ====
@@ -11,8 +12,12 @@ api_key = st.secrets["api_key"]
 
 dart = OpenDartReader(api_key) 
 
-today = datetime.now().strftime("%Y%m%d")
-day1wkago = (datetime.now() - dt.timedelta(days=7)).strftime("%Y%m%d")
+#today = datetime.now().strftime("%Y%m%d")
+KST = timezone('Asia/Seoul')
+now = datetime.utcnow()
+today = utc.localize(now).astimezone(KST).strftime("%Y%m%d")
+
+day1wkago = (utc.localize(now).astimezone(KST) - dt.timedelta(days=7)).strftime("%Y%m%d")
 
 allTickers = stock.get_market_price_change(day1wkago, today, market="ALL").reset_index()[['티커', '종목명']]
 
