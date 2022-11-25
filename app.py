@@ -144,6 +144,7 @@ st.markdown(f"# {compName} ({stockcd})")
 
 st.markdown(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}", unsafe_allow_html=True)
 
+st.write(stock.get_market_cap(day1wkago, today, stockcd))
 
 mktcap = stock.get_market_cap(day1wkago, today, stockcd)['시가총액'].tail(1).values[0]
 numstk = stock.get_market_cap(day1wkago, today, stockcd)['상장주식수'].tail(1).values[0]
