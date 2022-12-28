@@ -63,6 +63,8 @@ def get_market_cap(end_dd, quote):
     data = json.loads(MktData.text)
     #display(data['output'])
     df_result = pd.DataFrame(data['output'])[['TRD_DD', 'TDD_CLSPRC', 'MKTCAP', 'LIST_SHRS']]
+    df_result['MKTCAP'] = df_result['MKTCAP'].str.replace(',', '').astype(float)
+    df_result['LIST_SHRS'] = df_result['LIST_SHRS'].str.replace(',', '').astype(float)
     df_result.rename(columns = {'MKTCAP':'시가총액', 'LIST_SHRS':'상장주식수'}, inplace=True)
  
     return df_result
