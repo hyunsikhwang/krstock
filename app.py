@@ -4,6 +4,67 @@ import streamlit as st
 from datetime import datetime
 import datetime as dt
 from pytz import timezone, utc
+import bs4
+import requests
+import json
+from dateutil.relativedelta import relativedelta
+
+
+def post_beautiful_soup(url, payload):
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    return bs4.BeautifulSoup(requests.post(url, headers=headers, data=payload).text, "lxml")
+
+# 전종목 기본정보
+def KRX_12005():
+    df_result = pd.DataFrame()
+ 
+    url = 'http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd'
+
+    df_result = pd.DataFrame()
+
+    payload = {'bld': 'dbms/MDC/STAT/standard/MDCSTAT01901',
+               'mktId': 'ALL',
+               'share': '1',
+               'csvxls_isNo': 'false'
+    }
+    MktData = post_beautiful_soup(url, payload)
+
+    data = json.loads(MktData.text)
+    #display(pd.DataFrame(data['block1']))
+
+    df_result = pd.DataFrame(data['OutBlock_1'])
+
+    return df_result   
+
+# 시가총액
+def get_market_cap(end_dd, quote):
+    isu_cd = KRX_12005()
+    quote1 = isu_cd[(isu_cd['ISU_SRT_CD']==quote)]['ISU_CD'].values[0]
+
+    url = 'http://data.krx.co.kr/comm/bldAttendant/getJsonData.cmd'
+ 
+    strt_dd = (datetime.now() - relativedelta(days=7)).strftime("%Y%m%d")
+    payload = {'bld': 'dbms/MDC/STAT/standard/MDCSTAT01701',
+               'isuCd': quote1,
+               'isuCd2': quote1,
+               'param1isuCd_finder_stkisu0_7': 'ALL',
+               'strtDd': strt_dd,
+               'endDd': end_dd,
+               'adjStkPrc_check': 'Y',
+               'adjStkPrc': '2',
+               'share': '1',
+               'money': '1',
+               'csvxls_isNo': 'false'
+              }
+ 
+    MktData = post_beautiful_soup(url, payload)
+ 
+    data = json.loads(MktData.text)
+    #display(data['output'])
+    df_result = pd.DataFrame(data['output'])[['TRD_DD', 'TDD_CLSPRC', 'MKTCAP', 'LIST_SHRS']]
+    df_result.rename(columns = {'MKTCAP':'시가총액', 'LIST_SHRS':'상장주식수'}, inplace=True)
+ 
+    return df_result
 
 
 # ==== 0. 객체 생성 ====
@@ -144,10 +205,13 @@ st.markdown(f"# {compName} ({stockcd})")
 
 st.markdown(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}", unsafe_allow_html=True)
 
-st.write(stock.get_market_cap(day1wkago, today, stockcd))
+# st.write(stock.get_market_cap(day1wkago, today, stockcd))
 
-mktcap = stock.get_market_cap(day1wkago, today, stockcd)['시가총액'].tail(1).values[0]
-numstk = stock.get_market_cap(day1wkago, today, stockcd)['상장주식수'].tail(1).values[0]
+# mktcap = stock.get_market_cap(day1wkago, today, stockcd)['시가총액'].tail(1).values[0]
+# numstk = stock.get_market_cap(day1wkago, today, stockcd)['상장주식수'].tail(1).values[0]
+
+mktcap = get_market_cap(today, stockcd)['시가총액'].tail(1).values[0]
+numstk = get_market_cap(today, stockcd)['상장주식수'].tail(1).values[0]
 
 st.write(f"시가총액: {mktcap:,.0f} 원")
 st.write(f"주식수: {numstk:,.0f}")
