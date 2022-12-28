@@ -8,6 +8,7 @@ import bs4
 import requests
 import json
 from dateutil.relativedelta import relativedelta
+import pandas as pd
 
 
 def post_beautiful_soup(url, payload):
