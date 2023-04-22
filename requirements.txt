@@ -4,3 +4,4 @@ opendartreader
 pykrx
 bs4
 matplotlib
+plotly
