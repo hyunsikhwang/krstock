@@ -260,7 +260,7 @@ with tab2:
     s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=short_yr)).strftime('%Y%m%d')
 
     df_short = stock.get_shorting_balance_by_date(s_date, e_date, stockcd).reset_index()
-    df_price = stock.get_market_ohlcv(s_date, e_date, quote).reset_index()
+    df_price = stock.get_market_ohlcv(s_date, e_date, stockcd).reset_index()
 
     df_short = pd.merge(df_short, df_price, on="날짜")
 
