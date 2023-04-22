@@ -251,8 +251,8 @@ st.write(f"FCF/Equity: {fcf/equity:,.1%}")
 e_date = today
 s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=1)).strftime('%Y%m%d')
 
-df_short = stock.get_shorting_status_by_date(s_date, e_date, stockcd).reset_index()
+df_short = stock.get_shorting_balance_by_date(s_date, e_date, stockcd).reset_index()
 
 # st.dataframe(df_short)
-fig_short = px.line(df_short, x="날짜", y="잔고수량")
+fig_short = px.line(df_short, x="날짜", y="비중")
 st.plotly_chart(fig_short)
