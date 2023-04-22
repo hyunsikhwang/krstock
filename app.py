@@ -9,6 +9,7 @@ import requests
 import json
 from dateutil.relativedelta import relativedelta
 import pandas as pd
+import plotly.express as px
 
 
 def post_beautiful_soup(url, payload):
@@ -243,3 +244,13 @@ st.write(f"FCF/Equity: {fcf/equity:,.1%}")
 # asset 금액을 직전 4분기 평균이나 최근분기와 작년동기와의 평균값으로 사용
 # 배당수익률 추가
 # SKC 와 같이 유형자산의 취득, 무형자산의 취득 항목이 별도로 있지 않고 개별항목으로 재무제표 작성되어있는 회사들이 있어서 별도 처리 필요
+
+
+# 공매도(short sell) 추세를 표시해볼까?
+
+e_date = today
+s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=1)).strftime('%Y%m%d')
+
+df_short = stock.get_shorting_status_by_date(s_date, e_date, stockcd).reset_index()
+
+st.dataframe(df_short)
