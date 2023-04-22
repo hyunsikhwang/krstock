@@ -208,7 +208,7 @@ else:
 compName = stock.get_market_ticker_name(stockcd)
 
 # 여기서부터 출력
-tab1, tab2, tab3 = st.tabs(["Summary", "Short Selling"])
+tab1, tab2 = st.tabs(["Summary", "Short Selling"])
 
 with tab1:
     st.markdown(f"# {compName} ({stockcd})")
