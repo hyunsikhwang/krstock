@@ -253,4 +253,6 @@ s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=1)).strftime
 
 df_short = stock.get_shorting_status_by_date(s_date, e_date, stockcd).reset_index()
 
-st.dataframe(df_short)
+# st.dataframe(df_short)
+fig_short = px.line(df_short, x="날짜", y="잔고수량")
+st.plotly_chart(fig_short)
