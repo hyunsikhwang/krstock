@@ -207,52 +207,56 @@ else:
 
 compName = stock.get_market_ticker_name(stockcd)
 
-st.markdown(f"# {compName} ({stockcd})")
+# 여기서부터 출력
+tab1, tab2, tab3 = st.tabs(["Summary", "Short Selling"])
 
-st.markdown(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}", unsafe_allow_html=True)
+with tab1:
+    st.markdown(f"# {compName} ({stockcd})")
 
-# st.write(stock.get_market_cap(day1wkago, today, stockcd))
+    st.markdown(f"자본금: {equity:,.0f}<br>직전 4분기 당기순익: {profit:,.0f}<br>ROE: {profit/equity:,.1%}", unsafe_allow_html=True)
 
-# mktcap = stock.get_market_cap(day1wkago, today, stockcd)['시가총액'].tail(1).values[0]
-# numstk = stock.get_market_cap(day1wkago, today, stockcd)['상장주식수'].tail(1).values[0]
+    # st.write(stock.get_market_cap(day1wkago, today, stockcd))
 
-mktcap = get_market_cap(today, stockcd)['시가총액'].tail(1).values[0]
-numstk = get_market_cap(today, stockcd)['상장주식수'].tail(1).values[0]
+    # mktcap = stock.get_market_cap(day1wkago, today, stockcd)['시가총액'].tail(1).values[0]
+    # numstk = stock.get_market_cap(day1wkago, today, stockcd)['상장주식수'].tail(1).values[0]
 
-st.write(f"시가총액: {mktcap:,.0f} 원")
-st.write(f"주식수: {numstk:,.0f}")
-st.write(f"주당자산: {assets/numstk:,.0f} 원")
-st.write(f"주당이익: {profit/numstk:,.0f} 원")
-st.write(f"주가: {mktcap/numstk:,.0f} 원")
-st.write(f"PER: {mktcap/profit:,.2f}")
-st.write(f"PBR: {mktcap/assets:,.2f}")
-st.write(f"ROA: {profit/assets:,.1%}")
-st.write(f"GP/A: {grossprofit/assets:,.1%}")
-st.write(f"FCF/Equity: {fcf/equity:,.1%}")
+    mktcap = get_market_cap(today, stockcd)['시가총액'].tail(1).values[0]
+    numstk = get_market_cap(today, stockcd)['상장주식수'].tail(1).values[0]
 
-# 부채비율
-# 현금및현금성자산비율
-# 영업이익률
-# FCF = OCF - CAPEX
-# OCF = ifrs-full_CashFlowsFromUsedInOperatingActivities(영업활동을 통해 유입된 현금흐름)
-# CAPEX = ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities(유형자산의 취득) + ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities(무형자산의 취득)
+    st.write(f"시가총액: {mktcap:,.0f} 원")
+    st.write(f"주식수: {numstk:,.0f}")
+    st.write(f"주당자산: {assets/numstk:,.0f} 원")
+    st.write(f"주당이익: {profit/numstk:,.0f} 원")
+    st.write(f"주가: {mktcap/numstk:,.0f} 원")
+    st.write(f"PER: {mktcap/profit:,.2f}")
+    st.write(f"PBR: {mktcap/assets:,.2f}")
+    st.write(f"ROA: {profit/assets:,.1%}")
+    st.write(f"GP/A: {grossprofit/assets:,.1%}")
+    st.write(f"FCF/Equity: {fcf/equity:,.1%}")
 
-# FCF = CFO - CFI
-# CFO: 영업활동현금흐름
-# CFI: 투자활동현금흐름
+    # 부채비율
+    # 현금및현금성자산비율
+    # 영업이익률
+    # FCF = OCF - CAPEX
+    # OCF = ifrs-full_CashFlowsFromUsedInOperatingActivities(영업활동을 통해 유입된 현금흐름)
+    # CAPEX = ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities(유형자산의 취득) + ifrs-full_PurchaseOfIntangibleAssetsClassifiedAsInvestingActivities(무형자산의 취득)
 
-# asset 금액을 직전 4분기 평균이나 최근분기와 작년동기와의 평균값으로 사용
-# 배당수익률 추가
-# SKC 와 같이 유형자산의 취득, 무형자산의 취득 항목이 별도로 있지 않고 개별항목으로 재무제표 작성되어있는 회사들이 있어서 별도 처리 필요
+    # FCF = CFO - CFI
+    # CFO: 영업활동현금흐름
+    # CFI: 투자활동현금흐름
 
+    # asset 금액을 직전 4분기 평균이나 최근분기와 작년동기와의 평균값으로 사용
+    # 배당수익률 추가
+    # SKC 와 같이 유형자산의 취득, 무형자산의 취득 항목이 별도로 있지 않고 개별항목으로 재무제표 작성되어있는 회사들이 있어서 별도 처리 필요
 
-# 공매도(short sell) 추세를 표시해볼까?
+with tab2:
+    # 공매도(short sell) 추세를 표시해볼까?
 
-e_date = today
-s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=1)).strftime('%Y%m%d')
+    e_date = today
+    s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=1)).strftime('%Y%m%d')
 
-df_short = stock.get_shorting_balance_by_date(s_date, e_date, stockcd).reset_index()
+    df_short = stock.get_shorting_balance_by_date(s_date, e_date, stockcd).reset_index()
 
-# st.dataframe(df_short)
-fig_short = px.line(df_short, x="날짜", y="비중")
-st.plotly_chart(fig_short)
+    # st.dataframe(df_short)
+    fig_short = px.line(df_short, x="날짜", y="비중")
+    st.plotly_chart(fig_short)
