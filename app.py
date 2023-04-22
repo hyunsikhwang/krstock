@@ -252,8 +252,10 @@ with tab1:
 with tab2:
     # 공매도(short sell) 추세를 표시해볼까?
 
+    short_yr = st.selectbox("Select year", [1,2,3])
+
     e_date = today
-    s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=1)).strftime('%Y%m%d')
+    s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=short_yr)).strftime('%Y%m%d')
 
     df_short = stock.get_shorting_balance_by_date(s_date, e_date, stockcd).reset_index()
 
