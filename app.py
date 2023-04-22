@@ -10,6 +10,8 @@ import json
 from dateutil.relativedelta import relativedelta
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 
 def post_beautiful_soup(url, payload):
@@ -258,7 +260,20 @@ with tab2:
     s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=short_yr)).strftime('%Y%m%d')
 
     df_short = stock.get_shorting_balance_by_date(s_date, e_date, stockcd).reset_index()
+    df_price = stock.get_market_ohlcv(s_date, e_date, quote).reset_index()
+
+    df_short = pd.merge(df_short, df_price, on="날짜")
 
     # st.dataframe(df_short)
-    fig_short = px.line(df_short, x="날짜", y="비중")
+    fig_short = make_subplots(specs=[[{"secondary_y": True}]])
+
+    fig_short.add_trace(
+        go.Scatter(x=df_short['날짜'], y=df_short['비중'], name="공매도비중"),
+        secondary_y=False,
+    )
+
+    fig_short.add_trace(
+        go.Scatter(x=df_short['날짜'], y=df_short['종가'], name="일자별종가"),
+        secondary_y=True,
+    )
     st.plotly_chart(fig_short)
