@@ -254,7 +254,7 @@ with tab1:
 with tab2:
     # 공매도(short sell) 추세를 표시해볼까?
 
-    short_yr = st.selectbox("Select year", [1,2,3])
+    short_yr = st.selectbox("Select year", [1,2,3,4,5])
 
     e_date = today
     s_date = (datetime.strptime(e_date, '%Y%m%d') - relativedelta(years=short_yr)).strftime('%Y%m%d')
