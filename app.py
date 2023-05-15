@@ -114,6 +114,9 @@ except:
     # 연결재무제표가 없는 경우에는 개별재무제표 읽어옴
     fs_YQ = dart.finstate_all(corp=stockcd, bsns_year=f'{bsns_year}', fs_div='OFS', reprt_code=dict_qtr[bsns_qtr]) 
 
+# white space 가 간혹 존재하여 에러가 발생하는 문제가 있어서, 이를 0 처리함 (20230515)
+fs_YQ['thstrm_amount'] = fs_YQ['thstrm_amount'].apply(lambda x: 0 if x == '' else x)
+
 # 자본
 #fs_YQ.loc[fs_YQ['sj_div'].isin(['BS']) & fs_YQ['account_id'].isin(['ifrs-full_Equity']), ]
 
