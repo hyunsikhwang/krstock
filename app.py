@@ -90,7 +90,7 @@ allTickers = stock.get_market_price_change(day1wkago, today, market="ALL").reset
 
 tickers = allTickers['종목명'].tolist()
 
-stocknm = st.sidebar.selectbox("종목명", options=tickers, index=tickers.index('삼성전자'))
+stocknm = st.sidebar.selectbox("종목명", options=tickers, index=tickers.index('리노공업'))
 bsns_year = st.sidebar.number_input("연도", value=2023)
 bsns_qtr = st.sidebar.number_input("분기", value=1)
 
