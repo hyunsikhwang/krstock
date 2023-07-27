@@ -281,15 +281,19 @@ with tab2:
     )
     st.plotly_chart(fig_short)
     
-    ssCurrPct = df_short['비중'].iloc[-1]
-    ssMaxPct = df_short['비중'].max()
-    ssMinPct = df_short['비중'].min()
+    ssCurrPct = f"{df_short['비중'].iloc[-1]:.1f}%"
+    ssMaxPct = f"{df_short['비중'].max():.1f}%"
+    ssMinPct = f"{df_short['비중'].min():.1f}%"
+    ssAvgPct = f"{df_short['비중'].mean():.1f}%"
 
-    fig_short_dist = px.violin(df_short, y="비중", x="종가", box=True, points="all")
+    df_short['비중'] = f"{df_short['비중']:.1f}"
 
-    col1, col2, col3 = st.columns(3)
+    fig_short_dist = px.histogram(df_short, x="비중")
+
+    col1, col2, col3, col4 = st.columns(4)
     col1.metric(label="Today", value=ssCurrPct)
     col2.metric(label="Max", value=ssMaxPct)
     col3.metric(label="Min", value=ssMinPct)
+    col4.metric(label="Avg", value=ssAvgPct)
 
     st.plotly_chart(fig_short_dist)
