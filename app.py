@@ -286,7 +286,7 @@ with tab2:
     ssMinPct = f"{df_short['비중'].min():.1f}%"
     ssAvgPct = f"{df_short['비중'].mean():.1f}%"
 
-    df_short['비중'] = f"{df_short['비중']:.1f}"
+    df_short['비중'] = df_short['비중'].round(1)
 
     fig_short_dist = px.histogram(df_short, x="비중")
 
