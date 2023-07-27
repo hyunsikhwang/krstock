@@ -280,3 +280,16 @@ with tab2:
         secondary_y=True,
     )
     st.plotly_chart(fig_short)
+    
+    ssCurrPct = df_short['비중'].iloc[-1]
+    ssMaxPct = df_short['비중'].max()
+    ssMinPct = df_short['비중'].min()
+
+    fig_short_dist = px.violin(df_short, y="비중", x="종가", box=True, points="all")
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric(label="Today", value=ssCurrPct)
+    col2.metric(label="Max", value=ssMaxPct)
+    col3.metric(label="Min", value=ssMinPct)
+
+    st.plotly_chart(fig_short_dist)
