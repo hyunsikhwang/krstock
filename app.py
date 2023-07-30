@@ -194,11 +194,11 @@ except:
     except:
         # 매출총이익이 없고 영업수익이 있는 회사에 대한 예외처리(NAVER)
         # 전년도 당분기 누적금액
-        grossprofit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_Revenue']), 'frmtrm_add_amount' if bsns_qtr != 4 else 'frmtrm_amount'].replace(",", "")) # 영업수익
+        grossprofit_Prev_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & (fs_YQ['account_id'].isin(['ifrs-full_Revenue']) | fs_YQ['account_nm'].isin(['영업수익'])), 'frmtrm_add_amount' if bsns_qtr != 4 else 'frmtrm_amount'].replace(",", "")) # 영업수익
         # 전년도말 금액
-        grossprofit_Prev_Yr = int(fs_Prev_Yr.loc[fs_Prev_Yr['sj_div'].isin(['IS', 'CIS']) & fs_Prev_Yr['account_id'].isin(['ifrs-full_Revenue']), 'thstrm_amount'].replace(",", "")) # 영업수익
+        grossprofit_Prev_Yr = int(fs_Prev_Yr.loc[fs_Prev_Yr['sj_div'].isin(['IS', 'CIS']) & (fs_YQ['account_id'].isin(['ifrs-full_Revenue']) | fs_YQ['account_nm'].isin(['영업수익'])), 'thstrm_amount'].replace(",", "")) # 영업수익
         # 가장 최근 분기 금액
-        grossprofit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & fs_YQ['account_id'].isin(['ifrs-full_Revenue']), 'thstrm_add_amount' if bsns_qtr != 4 else 'thstrm_amount'].replace(",", "")) # 영업수익
+        grossprofit_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['IS', 'CIS']) & (fs_YQ['account_id'].isin(['ifrs-full_Revenue']) | fs_YQ['account_nm'].isin(['영업수익'])), 'thstrm_add_amount' if bsns_qtr != 4 else 'thstrm_amount'].replace(",", "")) # 영업수익
 
 
 profit = (profit_Prev_Yr-profit_Prev_YQ) + profit_Curr_YQ
