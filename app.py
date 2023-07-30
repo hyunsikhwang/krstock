@@ -179,8 +179,8 @@ except:
                       + int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['무형자산의 취득']), 'thstrm_amount'].replace(",", ""))
         fcf_2_Curr_YQ = 0
     except:
-        fcf_2_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['영업활동현금흐름']), 'thstrm_amount'].replace(",", "")) \
-                      - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_nm'].isin(['투자활동현금흐름']), 'thstrm_amount'].replace(",", ""))
+        fcf_2_Curr_YQ = int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_CashFlowsFromUsedInOperatingActivities']), 'thstrm_amount'].replace(",", "")) \
+                      - int(fs_YQ.loc[fs_YQ['sj_div'].isin(['CF']) & fs_YQ['account_id'].isin(['ifrs-full_CashFlowsFromUsedInInvestingActivities']), 'thstrm_amount'].replace(",", ""))
         capex_Curr_YQ = 0
 
     try:
