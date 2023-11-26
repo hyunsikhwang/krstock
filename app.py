@@ -92,7 +92,7 @@ tickers = allTickers['종목명'].tolist()
 
 stocknm = st.sidebar.selectbox("종목명", options=tickers, index=tickers.index('리노공업'))
 bsns_year = st.sidebar.number_input("연도", value=2023)
-bsns_qtr = st.sidebar.number_input("분기", value=2)
+bsns_qtr = st.sidebar.number_input("분기", value=3)
 
 # 종목명(stocknm)을 ticker(stockcd) 로 변경
 stockcd = allTickers[(allTickers['종목명'] == stocknm)]['티커'].values[0]
