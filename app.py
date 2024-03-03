@@ -12,6 +12,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import re
+import xmltodict
 
 
 def post_beautiful_soup(url, payload):
@@ -71,6 +73,105 @@ def get_market_cap(end_dd, quote):
     df_result.rename(columns = {'MKTCAP':'시가총액', 'LIST_SHRS':'상장주식수'}, inplace=True)
  
     return df_result
+
+# 배당정보 from seibro
+def get_post_bs(url, payload, headers):
+    res = requests.post(url, data=payload, headers=headers)
+    soup = bs4.BeautifulSoup(res.text, features="html.parser")
+
+    return soup
+
+def get_cust_no(cust_nm):
+    payload = f'<reqParam action="searchCompanyContentList" task="ksd.safe.bip.cmuc.User.process.SearchPTask"><IS_FF value=""/><search_string value="{cust_nm}"/></reqParam>'.encode('utf-8')
+
+    url = "https://seibro.or.kr/websquare/engine/proworks/callServletService.jsp"
+    headers = {
+        'Referer': 'https://seibro.or.kr/websquare/control.jsp?w2xPath=/IPORTAL/user/etc/BIP_CMUC01023P.xml',
+    }
+
+    res = get_post_bs(url, payload, headers)
+
+    return res
+
+def get_xml_results(result):
+    expr = r"<([0-9a-zA-Z\_]+)\s*value\=\"([0-9a-zA-Z가-힣\(\)\%\s]+)?\">"
+
+    # print(str(result.find("result")))
+    regex = re.findall(expr, str(result))
+    res_dict = dict(regex)
+
+    return res_dict
+
+def get_sb_info(quoteName):
+    url = "https://seibro.or.kr/websquare/engine/proworks/callServletService.jsp"
+
+    headers = {
+        'Referer': 'https://seibro.or.kr/websquare/control.jsp?w2xPath=/IPORTAL/user/company/BIP_CNTS01041V.xml&menuNo=285',
+    }
+
+    res_cust_no = get_cust_no(quoteName)
+    res_dict = get_xml_results(res_cust_no)
+    cust_no = res_dict['issuco_custno']
+
+    KST = timezone('Asia/Seoul')
+    now = datetime.utcnow()
+
+    SeoulTime = utc.localize(now).astimezone(KST)
+    RGT_STD_DT_FROM = (SeoulTime - relativedelta(years=5)).strftime("%Y%m%d")
+    RGT_STD_DT_TO = SeoulTime.strftime("%Y%m%d")
+
+    payload = f'''
+    <reqParam action="divStatInfoPList" task="ksd.safe.bip.cnts.Company.process.EntrFnafInfoPTask">
+        <RGT_STD_DT_FROM value="{RGT_STD_DT_FROM}"/>
+        <RGT_STD_DT_TO value="{RGT_STD_DT_TO}"/>
+        <ISSUCO_CUSTNO value="{cust_no}"/>
+        <KOR_SECN_NM value=""/>
+        <SECN_KACD value=""/>
+        <RGT_RSN_DTAIL_SORT_CD value=""/>
+        <LIST_TPCD value=""/>
+        <START_PAGE value="1"/>
+        <END_PAGE value="15"/>
+        <MENU_NO value="285"/>
+        <CMM_BTN_ABBR_NM value="allview,allview,print,hwp,word,pdf,searchIcon,seach,xls,link,link,wide,wide,top,"/>
+        <W2XPATH value="/IPORTAL/user/company/BIP_CNTS01041V.xml"/>
+    </reqParam>
+    '''
+
+    result = get_post_bs(url, payload, headers)
+
+    map_col_nm = {
+        'rgt_std_dt': '배정기준일',
+        'th1_pay_term_begin_dt': '현금배당지급일',
+        'deli_dt': '주식유통(교부)일',
+        'shotn_isin': '종목코드',
+        'kor_secn_nm': '종목명',
+        'list_tpnm': '시장구분',
+        'rgt_rsn_dtail_sort_nm': '배당구분',
+        'secn_dtail_kanm': '주식종류',
+        'cash_aloc_amt': '주당배당금_일반',
+        'diff_aloc_amt': '주당배당금_차등',
+        'cash_aloc_ratio': '주당배당률(일반)_현금',
+        'stk_aloc_ratio': '주당배당률(일반)_주식',
+        'diff_aloc_ratio1': '주당배당률(차등)_현금',
+        'diff_aloc_ratio2': '주당배당률(차등)_주식',
+        'pval': '액면가',
+        'setacc_mm': '결산월',
+        'issuco_custno': 'issuco_custno',
+        'rgt_racd': 'rgt_racd',
+        'setacc_mmdd': 'setacc_mmdd',
+        'ag_org_tpnm': '명의개서대리인',
+    }
+
+    df_dct_all = pd.DataFrame()
+    dct = xmltodict.parse(str(result))
+    for itm in dct['vector']['data']:
+        df_dct = pd.DataFrame.from_dict(itm['result'])
+        df_dct_all = pd.concat([df_dct_all, df_dct])
+
+    df_dct_all.rename(columns=map_col_nm, inplace=True)
+    df_dct_all.reset_index(drop=True, inplace=True)
+
+    return df_dct_all
 
 
 # ==== 0. 객체 생성 ====
@@ -213,7 +314,7 @@ else:
 compName = stock.get_market_ticker_name(stockcd)
 
 # 여기서부터 출력
-tab1, tab2 = st.tabs(["Summary", "Short Selling"])
+tab1, tab2, tab3 = st.tabs(["Summary", "Short Selling", "Dividend"])
 
 with tab1:
     st.markdown(f"# {compName} ({stockcd})")
@@ -297,3 +398,8 @@ with tab2:
     col4.metric(label="Avg", value=ssAvgPct)
 
     st.plotly_chart(fig_short_dist)
+
+with tab3:
+    df_div_info = get_sb_info(compName)
+
+    st.write(df_div_info)
