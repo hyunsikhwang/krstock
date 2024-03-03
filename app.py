@@ -402,4 +402,4 @@ with tab2:
 with tab3:
     df_div_info = get_sb_info(compName)
 
-    st.write(df_div_info)
+    st.data_editor(df_div_info)
