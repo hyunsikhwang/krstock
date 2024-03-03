@@ -102,14 +102,14 @@ def get_xml_results(result):
 
     return res_dict
 
-def get_sb_info(quoteName):
+def get_div_info(compName):
     url = "https://seibro.or.kr/websquare/engine/proworks/callServletService.jsp"
 
     headers = {
         'Referer': 'https://seibro.or.kr/websquare/control.jsp?w2xPath=/IPORTAL/user/company/BIP_CNTS01041V.xml&menuNo=285',
     }
 
-    res_cust_no = get_cust_no(quoteName)
+    res_cust_no = get_cust_no(compName)
     res_dict = get_xml_results(res_cust_no)
     cust_no = res_dict['issuco_custno']
 
@@ -172,6 +172,36 @@ def get_sb_info(quoteName):
     df_dct_all.reset_index(drop=True, inplace=True)
 
     return df_dct_all
+
+def get_div_dtl(compName):
+
+    url = "https://seibro.or.kr/websquare/engine/proworks/callServletService.jsp"
+
+    res_cust_no = get_cust_no(compName)
+    res_dict = get_xml_results(res_cust_no)
+    cust_no = res_dict['issuco_custno']
+
+    payload = f'''
+<reqParam action="entrDivResultsList" task="ksd.safe.bip.cnts.Company.process.EntrFnafInfoPTask"><MENU_NO value="26"/><CMM_BTN_ABBR_NM value="allview,allview,print,hwp,word,pdf,searchIcon,seach,link,link,wide,wide,top,"/><W2XPATH value="/IPORTAL/user/company/BIP_CNTS01043V.xml"/><ISSUCO_CUSTNO value="{cust_no}"/></reqParam>'''
+
+    headers = {
+        'Referer': 'https://seibro.or.kr/websquare/control.jsp?w2xPath=/IPORTAL/user/company/BIP_CNTS01043V.xml&menuNo=26',
+
+    }
+    res = get_post_bs(url, payload, headers)
+
+    df_xml_cols = pd.read_xml(str(res), xpath=".//data/*")
+    df_xml_col = df_xml_cols.columns
+
+    df_div_dtl = pd.DataFrame()
+    for colname in df_xml_col:
+        df_tmp = pd.read_xml(str(res), xpath=f'.//{colname}', attrs_only=True, parser="etree")
+        df_div_dtl = pd.concat([df_div_dtl, df_tmp], axis='columns')
+
+    df_div_dtl.columns = df_xml_col
+    df_div_dtl
+
+    return df_div_dtl
 
 
 # ==== 0. 객체 생성 ====
@@ -400,6 +430,10 @@ with tab2:
     st.plotly_chart(fig_short_dist)
 
 with tab3:
-    df_div_info = get_sb_info(compName)
+    df_div_info = get_div_info(compName)
 
     st.data_editor(df_div_info)
+
+    df_div_dtl = get_div_dtl(compName)
+
+    st.data_editor(df_div_dtl)
