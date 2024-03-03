@@ -199,7 +199,6 @@ def get_div_dtl(compName):
         df_div_dtl = pd.concat([df_div_dtl, df_tmp], axis='columns')
 
     df_div_dtl.columns = df_xml_col
-    df_div_dtl
 
     return df_div_dtl
 
